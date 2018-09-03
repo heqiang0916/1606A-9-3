@@ -7,6 +7,12 @@ var sass = require('gulp-scss')
 var minjs = require('gulp-uglify');
 //起服务
 var server = require('gulp-webserver');
+//引入json文件
+var bajson = require('./mock/swiper.json');
+//引入操作路径的内置模块
+var fs = require('fs');
+var path = require('path');
+var url = require('url');
 //压缩scss
 gulp.task('duiscss', function() {
         return gulp.src('./src/scss/*.scss')
@@ -23,5 +29,20 @@ gulp.task('duijs', function() {
             .pipe(minjs())
             .pipe(gulp.dest('./src/publit'))
     })
+    //起服务
+gulp.task('server', function() {
+        return gulp.src('src')
+            .pipe(server({
+                port: 8080, //端口号
+                open: true,
+                success: function(req, res, next) {
+                    var pathname = req.url;
+                    if (pathname === "./favicon.ico") {
+                        res.end('');
+                        return;
+                    }
+                }
+            }))
+    })
     //整合任务
-gulp.task('dev', gulp.series('duiscss', 'duijs', 'watch'))
+gulp.task('dev', gulp.series('duiscss', 'duijs', "server", 'watch'))

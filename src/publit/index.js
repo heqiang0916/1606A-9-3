@@ -1,0 +1,1 @@
+$(function(){$(".wrap p").on("click",function(){console.log(111)})});
